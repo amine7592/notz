@@ -83,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            if(resultCode == RESUL_REMOVE_NOTE){
+            if (resultCode == RESUL_REMOVE_NOTE) {
                 final int editedNotePosition = data.getIntExtra("position", -1);
                 mAdapter.removeNote(editedNotePosition);
 
 
-                Snackbar.make(mRecyclerView,getString(R.string.note_removed),Snackbar.LENGTH_LONG)
+                Snackbar.make(mRecyclerView, getString(R.string.note_removed), Snackbar.LENGTH_LONG)
                         .setAction(R.string.cancel, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -96,12 +96,11 @@ public class MainActivity extends AppCompatActivity {
                                 Note note = new Note(data.getStringExtra("title"),
                                         data.getStringExtra("description"));
 
-                                mAdapter.addNote(editedNotePosition,note);
+                                mAdapter.addNote(editedNotePosition, note);
                             }
                         })
                         .show();
             }
-
 
 
         }
@@ -115,39 +114,42 @@ public class MainActivity extends AppCompatActivity {
         final View dialogView = LayoutInflater.from(this)
                 .inflate(R.layout.dialog_add_note, null);
 
-        alertBuilder.setView(dialogView);
-        alertBuilder.setTitle(R.string.dialog_add_note_title);
 
         final EditText titleEt = dialogView.findViewById(R.id.dialog_title_et);
         final EditText descriptionEt = dialogView.findViewById(R.id.dialog_description_et);
 
-        alertBuilder.setPositiveButton(R.string.dialog_positive_button,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //
 
-                        String insertedTitle = titleEt.getText().toString();
-                        String insertedDescription = descriptionEt.getText().toString();
+        alertBuilder.setView(dialogView)
+                .setTitle(R.string.dialog_add_note_title)
+                .setPositiveButton(R.string.dialog_positive_button,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //
 
-                        Note.NoteBuilder builder = new Note.NoteBuilder();
-                        builder.setTitle(insertedTitle).setDescription(insertedDescription);
-                        mAdapter.addNote(builder.build());
+                                String insertedTitle = titleEt.getText().toString();
+                                String insertedDescription = descriptionEt.getText().toString();
 
-                    }
-                });
+                                Note.NoteBuilder builder = new Note.NoteBuilder();
+                                builder
+                                        .setTitle(insertedTitle)
+                                        .setDescription(insertedDescription)
+                                        .setId(12)
+                                        .setShownOnTop(true);
 
-        alertBuilder.setNegativeButton(R.string.dialog_negative_button,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //
-                    }
-                });
+                                mAdapter.addNote(builder.build());
 
-        alertBuilder.create();
-
-        alertBuilder.show();
+                            }
+                        })
+                .setNegativeButton(R.string.dialog_negative_button,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //
+                            }
+                        })
+                .create()
+                .show();
 
 
     }

@@ -81,7 +81,7 @@ public class Note {
         }
 
         public NoteBuilder setShownOnTop(boolean shownOnTop) {
-            isShownOnTop = shownOnTop;
+            this.isShownOnTop = shownOnTop;
             return this;
         }
 
