@@ -130,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
                         String insertedTitle = titleEt.getText().toString();
                         String insertedDescription = descriptionEt.getText().toString();
 
-                        Note note = new Note(insertedTitle,
-                                insertedDescription);
-                        mAdapter.addNote(note);
+                        Note.NoteBuilder builder = new Note.NoteBuilder();
+                        builder.setTitle(insertedTitle).setDescription(insertedDescription);
+                        mAdapter.addNote(builder.build());
 
                     }
                 });
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        alertBuilder.set
+        alertBuilder.create();
 
         alertBuilder.show();
 

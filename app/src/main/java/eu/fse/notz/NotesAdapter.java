@@ -94,7 +94,6 @@ public class NotesAdapter extends RecyclerView.Adapter {
     public void updateNote(int index, String title, String description) {
 
         Note note = mDataset.get(index);
-
         note.setTitle(title);
         note.setDescription(description);
         notifyItemChanged(index);
