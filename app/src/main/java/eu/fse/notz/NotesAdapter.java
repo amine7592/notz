@@ -98,6 +98,13 @@ public class NotesAdapter extends RecyclerView.Adapter {
         note.setDescription(description);
         notifyItemChanged(index);
 
+    }
+
+
+    public void addNotesList(ArrayList<Note> notes){
+
+        mDataset.addAll(notes);
+        notifyDataSetChanged();
 
     }
 
