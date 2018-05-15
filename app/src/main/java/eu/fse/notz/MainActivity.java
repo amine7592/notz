@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton addNoteButton;
 
+    private ProgressBar loading;
+
     // private String[] myDataset = {"nota 1"," nota 2", "fai la spesa", "paga bolletta luca", "dadsadasa", "dsasdasd", "dassad"};
     private ArrayList<Note> myDataset;
 
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.notes_rv);
+        loading = (ProgressBar) findViewById(R.id.loading);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -70,6 +74,17 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
 
+
+        if(getIntent() != null){
+
+            Intent intent = getIntent();
+            if(intent.getAction().equals(Intent.ACTION_SEND)){
+                String title = intent.getStringExtra(Intent.EXTRA_TEXT);
+                showDialog(title);
+
+            }
+        }
+
         getNotesFromURL();
 
 
@@ -81,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
 
     }
 
@@ -126,7 +143,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showDialog() {
+
+    private void showDialog(){
+        showDialog(null);
+    }
+
+    private void showDialog(String title) {
+
 
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 
@@ -136,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
 
         final EditText titleEt = dialogView.findViewById(R.id.dialog_title_et);
         final EditText descriptionEt = dialogView.findViewById(R.id.dialog_description_et);
+
+        if(title!= null) titleEt.setText(title);
 
 
         alertBuilder.setView(dialogView)
@@ -181,7 +206,8 @@ public class MainActivity extends AppCompatActivity {
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = "http://5af1bf8530f9490014ead894.mockapi.io/api/v1/notes";
+        //String url = "http://5af1bf8530f9490014ead894.mockapi.io/api/v1/notes";
+        String url = "http://www.mocky.io/v2/5af4468d55000062007a5239";
 
         // Request a string response from the provided URL.
         JsonArrayRequest jsonRequest = new JsonArrayRequest(
@@ -192,18 +218,25 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONArray response) {
                         // TODO manage success
-                        Log.d("jsonRequest",response.toString());
+
+                        loading.setVisibility(View.GONE);
+                        Log.d("jsonRequest", response.toString());
                         ArrayList<Note> noteListFromResponse = Note.getNotesList(response);
                         mAdapter.addNotesList(noteListFromResponse);
                     }
 
                 },
+
+
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("jsonRequest",error.getMessage());
+
+                        loading.setVisibility(View.GONE);
+                        error.printStackTrace();
+
                         Toast.makeText(MainActivity.this,
-                                error.getMessage(),
+                                "si è riscontrato un errore " + error.networkResponse.statusCode,
                                 Toast.LENGTH_LONG).show();
 
                     }
