@@ -15,6 +15,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/edit_description"/>
 
+
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/favourite_cb"
+        android:text="Set as favourite"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.NotActiveException;
@@ -32,12 +33,14 @@ public class NotesAdapter extends RecyclerView.Adapter {
         // each data item is just a string in this case
         public TextView titleTv;
         public TextView descriptionTv;
+        public ImageView favouriteIcon;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
             titleTv = (TextView) itemView.findViewById(R.id.title_tv);
             descriptionTv = (TextView) itemView.findViewById(R.id.description_tv);
+            favouriteIcon = itemView.findViewById(R.id.favourite_btn);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -53,7 +56,6 @@ public class NotesAdapter extends RecyclerView.Adapter {
                     intent.putExtra("position", getAdapterPosition());
 
                     ((MainActivity) context).startActivityForResult(intent, 1001);
-
 
                 }
             });
@@ -90,12 +92,29 @@ public class NotesAdapter extends RecyclerView.Adapter {
 
     }
 
+    private void moveOnTop(Note note){
 
-    public void updateNote(int index, String title, String description) {
+        int index = mDataset.indexOf(note);
+        mDataset.remove(index);
+        mDataset.add(0, note);
+        notifyDataSetChanged();
+    }
+
+    public void updateNote(int index, String title, String description,boolean isFavourite) {
 
         Note note = mDataset.get(index);
         note.setTitle(title);
         note.setDescription(description);
+        note.setShownOnTop(isFavourite);
+
+        if(isFavourite){
+            moveOnTop(note);
+            return;
+        }
+
+
+
+
         notifyItemChanged(index);
 
 
@@ -132,6 +151,7 @@ public class NotesAdapter extends RecyclerView.Adapter {
         // Data binding
         noteVH.titleTv.setText(currentNote.getTitle());
         noteVH.descriptionTv.setText(currentNote.getDescription());
+        if(currentNote.isShownOnTop()) noteVH.favouriteIcon.setVisibility(View.VISIBLE);
 
 
     }

@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,6 +21,8 @@ public class NoteActivity extends AppCompatActivity {
 
     String title,description;
 
+    CheckBox favouriteCB;
+
     Intent intent;
 
     @Override
@@ -30,6 +33,7 @@ public class NoteActivity extends AppCompatActivity {
         descriptionEt = (EditText) findViewById(R.id.edit_description);
         editConfirmBtn = (Button) findViewById(R.id.edit_confirm);
         deleteButton = (Button) findViewById(R.id.edit_delete);
+        favouriteCB = (CheckBox)findViewById(R.id.favourite_cb) ;
 
         //get values from launching intent
         intent = getIntent();
@@ -51,11 +55,15 @@ public class NoteActivity extends AppCompatActivity {
 
                 int position = intent.getIntExtra("position", -1);
 
+
+
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("title", editedTitle);
                 returnIntent.putExtra("description", editedDescription);
                 returnIntent.putExtra("position", position);
+                if(favouriteCB.isChecked()) returnIntent.putExtra("favourite",true);
                 setResult(Activity.RESULT_OK, returnIntent);
+
 
 
                 finish();

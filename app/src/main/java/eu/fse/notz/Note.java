@@ -8,7 +8,7 @@ public class Note {
 
     private String title, description;
     private int id;
-    private boolean isShownOnTop;
+    private boolean isShownOnTop = false;
 
 
     public Note(String title, String description) {

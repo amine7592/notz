@@ -35,6 +35,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_NOTE_TABLE = "CREATE TABLE " + TABLE_NOTES + "("

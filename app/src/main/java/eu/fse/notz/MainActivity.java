@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton addNoteButton;
 
+
+    private DatabaseHandler dbHandler;
     // private String[] myDataset = {"nota 1"," nota 2", "fai la spesa", "paga bolletta luca", "dadsadasa", "dsasdasd", "dassad"};
     private ArrayList<Note> myDataset;
 
@@ -47,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         myDataset = new ArrayList<>();
+        dbHandler = new DatabaseHandler(this);
+
+
+        myDataset = dbHandler.getAllNotes();
+
+
+
 
 
         // specify an adapter (see also next example)
@@ -63,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
     }
 
 
@@ -77,14 +90,22 @@ public class MainActivity extends AppCompatActivity {
                 //getPosition from returnIntent
                 int editedNotePosition = data.getIntExtra("position", -1);
 
+
+
                 mAdapter.updateNote(editedNotePosition,
                         data.getStringExtra("title"),
-                        data.getStringExtra("description"));
+                        data.getStringExtra("description"),
+                        data.getBooleanExtra("favourite",false));
+
+                dbHandler.updateNote(mAdapter.getNote(editedNotePosition));
+
 
             }
 
             if (resultCode == RESUL_REMOVE_NOTE) {
                 final int editedNotePosition = data.getIntExtra("position", -1);
+
+                dbHandler.deletNote(mAdapter.getNote(editedNotePosition));
                 mAdapter.removeNote(editedNotePosition);
 
 
@@ -97,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                         data.getStringExtra("description"));
 
                                 mAdapter.addNote(editedNotePosition, note);
+                                dbHandler.addNote(note);
                             }
                         })
                         .show();
@@ -130,14 +152,15 @@ public class MainActivity extends AppCompatActivity {
                                 String insertedTitle = titleEt.getText().toString();
                                 String insertedDescription = descriptionEt.getText().toString();
 
-                                Note.NoteBuilder builder = new Note.NoteBuilder();
-                                builder
+                                Note.NoteBuilder noteBuilder = new Note.NoteBuilder();
+                                noteBuilder
                                         .setTitle(insertedTitle)
                                         .setDescription(insertedDescription)
                                         .setId(12)
                                         .setShownOnTop(true);
 
-                                mAdapter.addNote(builder.build());
+                                mAdapter.addNote(noteBuilder.build());
+                                dbHandler.addNote(noteBuilder.build());
 
                             }
                         })
